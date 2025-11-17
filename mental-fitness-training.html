@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#111111">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Mental Fitness Training</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="#" id="manifest-placeholder">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --bg-input: #151515;
+            --accent: #00ff88;
+            --accent-dim: #00cc6a;
+            --text-primary: #ffffff;
+            --text-secondary: #999999;
+            --text-dim: #666666;
+            --border: #2a2a2a;
+            --danger: #ff4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            padding-bottom: 80px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .emergency-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Content Container */
+        .container {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--accent);
+            color: var(--bg-dark);
+            border: none;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            background: var(--accent-dim);
+        }
+
+        .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-small {
+            padding: 10px 16px;
+            font-size: 14px;
+        }
+
+        /* Input Fields */
+        input, textarea, select {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            margin-bottom: 12px;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            background: var(--bg-input);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .progress-fill {
+            background: var(--accent);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            cursor: pointer;
+            color: var(--text-dim);
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            font-size: 12px;
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        /* Views */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* Exercise Display */
+        .exercise-category {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--bg-dark);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .exercise-instructions {
+            background: var(--bg-input);
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            line-height: 1.6;
+        }
+
+        .exercise-instructions ol {
+            margin-left: 20px;
+        }
+
+        .exercise-instructions li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        /* Timer Display */
+        .timer-display {
+            font-size: 48px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--accent);
+            margin: 24px 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Ladder Items */
+        .ladder-item {
+            background: var(--bg-input);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .ladder-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .ladder-item-text {
+            flex: 1;
+            margin-right: 12px;
+        }
+
+        .ladder-item-rating {
+            background: var(--accent);
+            color: var(--bg-dark);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .ladder-item-attempts {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .ladder-item-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn-icon {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* Breathing Exercise */
+        .breathing-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin: 40px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--bg-dark);
+            transition: transform 4s ease-in-out;
+        }
+
+        .breathing-circle.expand {
+            transform: scale(1.3);
+        }
+
+        .breathing-circle.contract {
+            transform: scale(0.7);
+        }
+
+        /* Calendar Heatmap */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-top: 12px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            background: var(--bg-input);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .calendar-day.active {
+            background: var(--accent);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 200;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-up {
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Completion Celebration */
+        .celebration {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .celebration-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .celebration-text {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .celebration-subtext {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        /* Log Entry */
+        .log-entry {
+            background: var(--bg-input);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .log-date {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .log-text {
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        /* Category Badge */
+        .category-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .category-badge {
+            background: var(--bg-input);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .category-badge-count {
+            color: var(--accent);
+            font-weight: 700;
+            margin-left: 4px;
+        }
+
+        /* Range Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--bg-input);
+            height: 8px;
+            border-radius: 4px;
+            outline: none;
+            border: 1px solid var(--border);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .range-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Workability Rating */
+        .rating-buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .rating-btn {
+            aspect-ratio: 1;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .rating-btn.selected {
+            background: var(--accent);
+            color: var(--bg-dark);
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1 id="header-title">MFT</h1>
+        <button class="emergency-btn" onclick="openEmergency()">🎯 NOW</button>
+    </div>
+
+    <!-- Main Views -->
+    <div id="app">
+        <!-- TRAIN VIEW -->
+        <div id="train-view" class="view active">
+            <div class="container">
+                <div class="card slide-up">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Today's Training</div>
+                            <div class="card-subtitle" id="today-category">Loading...</div>
+                        </div>
+                        <div id="streak-badge" class="stat-value" style="font-size: 24px;">0🔥</div>
+                    </div>
+                    <div id="exercise-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LADDER VIEW -->
+        <div id="ladder-view" class="view">
+            <div class="container">
+                <div class="card">
+                    <div class="card-title">Exposure Ladder</div>
+                    <div class="card-subtitle">Rank work situations by anxiety level. Face them systematically.</div>
+
+                    <button class="btn btn-small" onclick="showAddLadderItem()">+ Add Situation</button>
+                </div>
+
+                <div id="ladder-list"></div>
+            </div>
+        </div>
+
+        <!-- STATS VIEW -->
+        <div id="stats-view" class="view">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-sessions">0</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="current-streak">0</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="exposure-count">0</div>
+                        <div class="stat-label">Exposures</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="incident-count">0</div>
+                        <div class="stat-label">Work Incidents</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Training Balance</div>
+                    <div class="card-subtitle">Sessions by skill category</div>
+                    <div class="category-badges" id="category-stats"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Activity Heatmap</div>
+                    <div class="card-subtitle">Last 28 days</div>
+                    <div class="calendar-grid" id="calendar-heatmap"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Workability Log</div>
+                    <div class="card-subtitle">How functional were you today?</div>
+                    <button class="btn btn-secondary btn-small" onclick="showWorkabilityRating()">Log Today</button>
+                    <div id="workability-history" style="margin-top: 16px;"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Work Incident Log</div>
+                    <div class="card-subtitle">Track high-stress episodes</div>
+                    <button class="btn btn-secondary btn-small" onclick="showIncidentLog()">Log Incident</button>
+                    <div id="incident-history" style="margin-top: 16px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="switchView('train')">
+            <div class="nav-icon">💪</div>
+            <div>TRAIN</div>
+        </button>
+        <button class="nav-item" onclick="switchView('ladder')">
+            <div class="nav-icon">📊</div>
+            <div>LADDER</div>
+        </button>
+        <button class="nav-item" onclick="switchView('stats')">
+            <div class="nav-icon">📈</div>
+            <div>STATS</div>
+        </button>
+    </div>
+
+    <!-- Modals -->
+    <div id="emergency-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Tactical Breathing</div>
+                <button class="close-btn" onclick="closeEmergency()">×</button>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                Box breathing pattern. 4 counts each phase. Do 4 complete cycles.
+            </p>
+            <div class="breathing-circle" id="breathing-circle">READY</div>
+            <div id="breathing-instruction" style="text-align: center; font-size: 18px; font-weight: 600; margin-bottom: 20px;">
+                Tap Start when ready
+            </div>
+            <button class="btn" id="breathing-btn" onclick="startBreathing()">START</button>
+        </div>
+    </div>
+
+    <div id="ladder-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Add Exposure Item</div>
+                <button class="close-btn" onclick="closeLadderModal()">×</button>
+            </div>
+            <input type="text" id="ladder-situation" placeholder="Work situation (e.g., 'Speaking in team meeting')">
+            <label style="display: block; color: var(--text-secondary); margin-bottom: 8px;">Anxiety Level</label>
+            <input type="range" id="ladder-rating" min="1" max="10" value="5">
+            <div class="range-label">
+                <span>Low (1)</span>
+                <span id="ladder-rating-value">5</span>
+                <span>High (10)</span>
+            </div>
+            <button class="btn" onclick="addLadderItem()">Add to Ladder</button>
+        </div>
+    </div>
+
+    <div id="exposure-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Log Exposure Attempt</div>
+                <button class="close-btn" onclick="closeExposureModal()">×</button>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                <strong id="exposure-situation"></strong>
+            </p>
+            <textarea id="exposure-note" placeholder="Brief note (optional): What happened? How did you show up?"></textarea>
+            <button class="btn" onclick="logExposure()">Log Attempt</button>
+        </div>
+    </div>
+
+    <div id="workability-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Workability Rating</div>
+                <button class="close-btn" onclick="closeWorkabilityModal()">×</button>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                How workable was today? (1 = totally stuck, 10 = highly functional)
+            </p>
+            <div class="rating-buttons" id="workability-buttons"></div>
+            <button class="btn" onclick="saveWorkability()">Save Rating</button>
+        </div>
+    </div>
+
+    <div id="incident-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Log Work Incident</div>
+                <button class="close-btn" onclick="closeIncidentModal()">×</button>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                Track high-stress episodes or panic attacks at work
+            </p>
+            <input type="text" id="incident-trigger" placeholder="What triggered it?">
+            <textarea id="incident-note" placeholder="Additional notes (optional)"></textarea>
+            <button class="btn" onclick="logIncident()">Log Incident</button>
+        </div>
+    </div>
+
+    <script>
+        // Exercise Database (from ACT books)
+        const EXERCISES = {
+            defusion: [
+                {
+                    name: '"I\'m Having the Thought That..." Exercise',
+                    description: 'Add psychological distance from thoughts by reframing them as mental events rather than facts.',
+                    instructions: [
+                        'Write down several unhelpful thoughts (e.g., "I\'m going to fail," "They think I\'m incompetent")',
+                        'Read each thought aloud with weight and gravity',
+                        'Add "I\'m having the thought that..." before each statement',
+                        'Read aloud: "I\'m having the thought that I\'m going to fail"',
+                        'Add another layer: "I\'m noticing that I\'m having the thought that..."',
+                        'Notice the distance and sense of choice that emerges'
+                    ],
+                    timing: 5
+                },
+                {
+                    name: 'Thought Labeling',
+                    description: 'Create distance from thoughts by categorizing them as mental events rather than facts.',
+                    instructions: [
+                        'Throughout the day, notice your thoughts as they arise',
+                        'Label each thought type: "judgment," "worry," "planning," "memory"',
+                        'Don\'t try to change or eliminate them',
+                        'Simply acknowledge: "My mind is having a judgment thought right now"',
+                        'Continue with your work without getting hooked'
+                    ],
+                    timing: 10
+                },
+                {
+                    name: 'Passengers on the Bus',
+                    description: 'Visualize thoughts and feelings as passengers you can acknowledge without letting them control your direction.',
+                    instructions: [
+                        'Imagine you\'re driving a bus (your career) with passengers (thoughts, feelings)',
+                        'Notice passengers becoming vocal, threatening, or demanding you change direction',
+                        'Recognize the urge to argue with passengers or pull over',
+                        'Instead, acknowledge their presence',
+                        'Keep driving toward your valued direction while bringing passengers along',
+                        'Notice you can move forward even with uncomfortable passengers present'
+                    ],
+                    timing: 7
+                },
+                {
+                    name: 'Just Observe',
+                    description: 'Build the skill of observing thoughts without reacting or trying to change them.',
+                    instructions: [
+                        'When negative thoughts arise at work, simply observe them',
+                        'Label them mentally: "That\'s a thought"',
+                        'Don\'t analyze where they came from or try to change them',
+                        'Allow thoughts to exist without engaging with their content',
+                        'Practice returning focus to the task at hand'
+                    ],
+                    timing: 5
+                },
+                {
+                    name: 'Switching to "Just" Language',
+                    description: 'Minimize emotional reactions by reframing experiences as temporary states.',
+                    instructions: [
+                        'Notice when you\'re experiencing intense emotions at work',
+                        'Switch statements like "I\'m terrified" to "I\'m just feeling anxious"',
+                        'Use the word "just" to create space: "I\'m just worrying," "I\'m just stressed"',
+                        'Notice how this creates distance from the experience',
+                        'Continue working while carrying these lighter descriptions'
+                    ],
+                    timing: 5
+                }
+            ],
+            acceptance: [
+                {
+                    name: 'Tug of War with Anxiety',
+                    description: 'Physical metaphor showing how struggling with anxiety makes it stronger, and how dropping the rope creates freedom.',
+                    instructions: [
+                        'Imagine playing tug of war with anxiety over a pit at work',
+                        'Notice that pulling harder requires more energy and gets you nowhere',
+                        'Recognize the natural response is to pull, but this keeps you stuck',
+                        'Consider the alternative: dropping the rope entirely',
+                        'Drop the rope and notice you\'re no longer in a battle',
+                        'Observe that anxiety is still there, but you have freedom to move',
+                        'Notice when you "pick up the rope" to struggle at work'
+                    ],
+                    timing: 7
+                },
+                {
+                    name: 'Opening Up to Physical Sensations',
+                    description: 'Practice allowing difficult physical sensations to exist without suppression.',
+                    instructions: [
+                        'When physical anxiety hits (racing heart, tight chest), pause',
+                        'Observe and label the sensation without judgment',
+                        'Notice exactly where you feel it in your body',
+                        'Breathe slowly and create space for the sensation',
+                        'Allow it to exist without trying to change or eliminate it',
+                        'Recognize sensations typically peak and pass in about 60 seconds',
+                        'Continue your work task while carrying the sensation'
+                    ],
+                    timing: 5
+                },
+                {
+                    name: 'Chinese Finger Trap Principle',
+                    description: 'Learn that pushing into anxiety (acceptance) creates space, while pulling away (avoidance) creates restriction.',
+                    instructions: [
+                        'Recall how Chinese finger traps work',
+                        'Notice the automatic urge to escape anxiety',
+                        'Recognize that pulling away makes anxiety tighter',
+                        'Consider pushing into the anxiety instead',
+                        'Move toward anxious situations mindfully rather than away',
+                        'Notice this counterintuitive move creates more freedom'
+                    ],
+                    timing: 5
+                },
+                {
+                    name: 'Exploring the Experience',
+                    description: 'Develop curiosity about emotions rather than fear, reducing their power.',
+                    instructions: [
+                        'When strong emotion arises, step away briefly if possible',
+                        'Become curious about the experience',
+                        'Observe how the emotion feels in your body',
+                        'Notice thoughts that accompany it',
+                        'Allow yourself to fully experience it without exaggerating',
+                        'Observe the emotion peak and then begin to subside',
+                        'Notice it\'s less overwhelming than your mind predicted'
+                    ],
+                    timing: 8
+                },
+                {
+                    name: 'Giving Emotions Space',
+                    description: 'Allow physical and physiological responses to complete naturally.',
+                    instructions: [
+                        'Recognize that emotions create physical responses in your body',
+                        'Give yourself permission for these responses to occur',
+                        'Maintain awareness of emotions during work tasks',
+                        'If you can\'t process emotions immediately, schedule time later',
+                        'Recall triggering events and allow delayed emotional expression',
+                        'Notice this neutralizes triggers over time'
+                    ],
+                    timing: 6
+                }
+            ],
+            present: [
+                {
+                    name: 'Five Senses Grounding',
+                    description: 'Rapid grounding technique that brings you into the present moment through sensory awareness.',
+                    instructions: [
+                        'Look for 5 things you can see in your workspace',
+                        'Touch 4 different things and notice their texture',
+                        'Listen for 3 different sounds around you',
+                        'Smell 2 different things (coffee, air, etc.)',
+                        'Taste 1 thing (water, gum, or notice taste in your mouth)',
+                        'Return focus to your present task'
+                    ],
+                    timing: 3
+                },
+                {
+                    name: 'Tactical Breathing',
+                    description: 'Box breathing pattern for rapid nervous system regulation under pressure.',
+                    instructions: [
+                        'Breathe in through nose for 4 counts',
+                        'Hold breath for 4 counts',
+                        'Breathe out through mouth for 4 counts',
+                        'Hold empty for 4 counts',
+                        'Repeat for 4 complete cycles (about 2 minutes)',
+                        'Return to work with clearer focus'
+                    ],
+                    timing: 2
+                },
+                {
+                    name: 'Mindfulness of Breath and Body',
+                    description: 'Foundational mindfulness practice using breath and body as present moment anchors.',
+                    instructions: [
+                        'Find a moment to pause at your desk',
+                        'Notice your body and the movement of breathing',
+                        'Feel breath entering and leaving your body',
+                        'Notice chest or belly rising and falling',
+                        'When mind drifts to work stress, return to breath',
+                        'Expand awareness to include body sensations',
+                        'Use breath as your anchor to the present'
+                    ],
+                    timing: 7
+                },
+                {
+                    name: 'Describe the Moment',
+                    description: 'Build present moment awareness by narrating current experience.',
+                    instructions: [
+                        'Describe what you\'re doing right now: "I am sitting," "I am typing"',
+                        'Include mundane details: "I feel the chair beneath me"',
+                        'Notice neutral or positive aspects of your current experience',
+                        'Avoid judging or analyzing',
+                        'Simply describe observable facts',
+                        'Practice throughout work day'
+                    ],
+                    timing: 5
+                },
+                {
+                    name: 'Active Listening',
+                    description: 'Use listening to anchor attention in the present and disconnect from rumination.',
+                    instructions: [
+                        'In meetings or conversations, focus entirely on others\' words',
+                        'Don\'t plan your response while they speak',
+                        'Notice their tone, pace, and emotion',
+                        'If alone, listen to ambient sounds: HVAC, keyboards, traffic',
+                        'Let sounds anchor you in the present moment',
+                        'Return to this when mind spirals about performance'
+                    ],
+                    timing: 5
+                }
+            ],
+            values: [
+                {
+                    name: 'Funeral Meditation',
+                    description: 'Powerful exercise connecting you with what you want your career to stand for.',
+                    instructions: [
+                        'Get comfortable and close your eyes for a moment',
+                        'Imagine your retirement party or end-of-career reflection',
+                        'Visualize colleagues and friends gathered',
+                        'Listen to what each person says about your contributions',
+                        'In your heart, choose what you most want to hear',
+                        'Let colleagues, mentors, reports speak about your impact',
+                        'Notice what their comments reveal about your values',
+                        'Write down what you heard and wanted to hear'
+                    ],
+                    timing: 12
+                },
+                {
+                    name: 'Life Domains Evaluation',
+                    description: 'Comprehensive assessment of how you\'re living to identify where changes are needed.',
+                    instructions: [
+                        'Rate these areas 1-10: Career, Health, Relationships, Skills, Purpose',
+                        'Write reasons for your rating in each area',
+                        'List all strengths in that area',
+                        'List all weaknesses or areas for growth',
+                        'Identify which area needs most attention',
+                        'Notice patterns across domains'
+                    ],
+                    timing: 15
+                },
+                {
+                    name: 'Life Book of Possibilities',
+                    description: 'Creates awareness that your career future is unwritten.',
+                    instructions: [
+                        'Close your eyes briefly',
+                        'Bring awareness to your breath',
+                        'Open eyes and imagine holding a book called "Your Career"',
+                        'Notice pages written up until now',
+                        'See that tomorrow\'s page is completely blank',
+                        'Recognize your future is full of possibilities',
+                        'Ask: "What do I want the next chapter to say about me?"',
+                        'Write down what you want to be about professionally'
+                    ],
+                    timing: 10
+                },
+                {
+                    name: 'Values-Based Decision Making',
+                    description: 'Four questions to ensure decisions align with core values.',
+                    instructions: [
+                        'Identify a work decision you\'re facing',
+                        'Ask: "Which option best aligns with my core values?"',
+                        'Ask: "What are the specific details of this commitment?"',
+                        'Ask: "Does this honor other people\'s values?"',
+                        'Ask: "Does this give me direction toward my big picture goals?"',
+                        'Choose the option that best answers all questions'
+                    ],
+                    timing: 8
+                },
+                {
+                    name: 'Rediscovering Authentic Values',
+                    description: 'Systematic process to identify core work values.',
+                    instructions: [
+                        'List potential work values: integrity, growth, impact, collaboration, excellence, autonomy, etc.',
+                        'Rate each value from 1-10 (10 being most valued)',
+                        'Group related values into themes',
+                        'Identify the word that best describes each group',
+                        'Highlight your top 5 core work values',
+                        'Write rich context for each value explaining why it matters',
+                        'Ensure genuine emotional connection to each'
+                    ],
+                    timing: 20
+                }
+            ],
+            action: [
+                {
+                    name: 'The Five Why Strategy',
+                    description: 'Identify root motivations behind problematic work patterns.',
+                    instructions: [
+                        'Identify a problematic work behavior (e.g., avoiding presentations)',
+                        'Ask yourself "Why do I do this?"',
+                        'Answer honestly',
+                        'Take that answer and ask "Why?" again',
+                        'Continue asking "Why?" up to five times',
+                        'The final answer reveals your core fear or motivation',
+                        'Use this insight to plan different responses'
+                    ],
+                    timing: 10
+                },
+                {
+                    name: 'Identifying Valued Actions',
+                    description: 'Connect values to specific behaviors you can commit to.',
+                    instructions: [
+                        'Choose one work value (e.g., "competence" or "contribution")',
+                        'Identify current difficulty related to this value',
+                        'Describe internal barriers (thoughts, feelings) preventing action',
+                        'Brainstorm possible actions aligned with this value',
+                        'Choose actions that honor multiple values',
+                        'Commit to taking these specific actions this week'
+                    ],
+                    timing: 12
+                },
+                {
+                    name: 'SMART Goals for Performance',
+                    description: 'Create concrete, measurable action plans.',
+                    instructions: [
+                        'Write down problematic work behavior needing change',
+                        'Define day-to-day actions to shift the pattern',
+                        'Make goals Specific (exactly what you\'ll do)',
+                        'Make goals Measurable (how you\'ll track)',
+                        'Make goals Accurate (truly addresses the issue)',
+                        'Make goals Realistic (achievable with your resources)',
+                        'Set Timeline for check-ins to assess progress',
+                        'Define how you\'ll handle obstacles'
+                    ],
+                    timing: 15
+                },
+                {
+                    name: 'Tracking for Awareness',
+                    description: 'Build awareness of behavior patterns through systematic tracking.',
+                    instructions: [
+                        'Choose a behavior to track (avoidance, procrastination, people-pleasing)',
+                        'Get a small notebook or phone note',
+                        'Log every instance throughout the day',
+                        'Note time, situation, thoughts, feelings',
+                        'Review daily to identify patterns',
+                        'Use increased awareness to make different choices',
+                        'Continue tracking to maintain accountability'
+                    ],
+                    timing: null
+                },
+                {
+                    name: 'Barrier Identification',
+                    description: 'Map stuck situations to plan forward movement.',
+                    instructions: [
+                        'Describe a current work difficulty',
+                        'Identify a value that feels remote due to this situation',
+                        'List internal barriers (thoughts, feelings) between you and the value',
+                        'List your current behavioral responses to these barriers',
+                        'Notice whether responses move toward or away from value',
+                        'Identify acceptance-based alternative responses',
+                        'Commit to trying new response pattern'
+                    ],
+                    timing: 15
+                }
+            ],
+            context: [
+                {
+                    name: 'Sky and Weather',
+                    description: 'Establish observer self as container for thoughts and feelings, bigger than any content.',
+                    instructions: [
+                        'Think about the sky on a recent day',
+                        'Notice people usually describe the weather, not the sky itself',
+                        'Recognize how changeable weather is',
+                        'Note the sky contains weather but cannot be damaged by it',
+                        'Recognize: "You are the sky. Everything else is the weather"',
+                        'You are the container for thoughts and feelings',
+                        'Notice you are bigger than any work stress or anxiety',
+                        'Difficult content cannot damage your essential self'
+                    ],
+                    timing: 8
+                },
+                {
+                    name: 'Observing Self Perspective',
+                    description: 'Develop ability to observe yourself from a detached perspective.',
+                    instructions: [
+                        'Recognize you have two perspectives: acting and observing',
+                        'Acting perspective engages with work',
+                        'Observing perspective watches you working',
+                        'Practice shifting to observer view during tasks',
+                        'Watch yourself working without emotional involvement',
+                        'Notice this creates distance and control',
+                        'Use observer perspective during difficult meetings'
+                    ],
+                    timing: 7
+                },
+                {
+                    name: 'Interpersonal Perspective Taking',
+                    description: 'Build flexibility by taking others\' viewpoints.',
+                    instructions: [
+                        'Select a work relationship challenge',
+                        'Close eyes and imagine being the other person',
+                        'View the situation from their perspective',
+                        'Ask: "What were they trying to communicate?"',
+                        'Consider: "What would they do in my position?"',
+                        'Notice what this reveals about your own patterns',
+                        'Practice with different colleagues and situations'
+                    ],
+                    timing: 8
+                },
+                {
+                    name: 'Temporal Perspective Taking',
+                    description: 'Shift viewpoint through time to gain wisdom.',
+                    instructions: [
+                        'Imagine yourself two weeks ago - what would that version want you to remember?',
+                        'Imagine yourself two years in the future - what advice would you give yourself now?',
+                        'Imagine yourself as a new hire experiencing current stress - observe from experienced perspective',
+                        'Notice what you see in your patterns and responses',
+                        'Use these perspectives to guide current work choices'
+                    ],
+                    timing: 10
+                },
+                {
+                    name: 'Retelling Your Professional Story',
+                    description: 'Identify false self-conceptualizations and create authentic narrative.',
+                    instructions: [
+                        'Write your current professional self-story: who you believe you are',
+                        'Be honest about harsh self-judgments ("I\'m incompetent," etc.)',
+                        'Read through and challenge each point for accuracy',
+                        'Note truth next to false judgments',
+                        'Write objective, non-emotional description of true professional self',
+                        'Commit to embodying authentic identity',
+                        'Notice emotional reactions and recommit when triggered'
+                    ],
+                    timing: 25
+                }
+            ]
+        };
+
+        // Category metadata
+        const CATEGORIES = {
+            defusion: { name: 'Defusion Training', icon: '🧠' },
+            acceptance: { name: 'Acceptance Work', icon: '💥' },
+            present: { name: 'Present Moment', icon: '⚡' },
+            values: { name: 'Values Clarification', icon: '🎯' },
+            action: { name: 'Committed Action', icon: '🔨' },
+            context: { name: 'Self-as-Context', icon: '🌌' }
+        };
+
+        // State management
+        let state = {
+            currentExercise: null,
+            exerciseRotation: [],
+            completedSessions: [],
+            exposureLadder: [],
+            workabilityRatings: [],
+            incidents: [],
+            currentLadderItem: null,
+            selectedWorkability: null,
+            breathingInterval: null,
+            breathingPhase: 0
+        };
+
+        // Initialize app
+        function init() {
+            loadState();
+            initializeRotation();
+            renderTodayExercise();
+            renderLadder();
+            renderStats();
+            updateStreak();
+            setupManifest();
+
+            // Update ladder rating display
+            const ratingSlider = document.getElementById('ladder-rating');
+            if (ratingSlider) {
+                ratingSlider.addEventListener('input', (e) => {
+                    document.getElementById('ladder-rating-value').textContent = e.target.value;
+                });
+            }
+        }
+
+        // Initialize exercise rotation
+        function initializeRotation() {
+            if (state.exerciseRotation.length === 0) {
+                const categoryKeys = Object.keys(EXERCISES);
+                let rotation = [];
+                let maxExercises = Math.max(...categoryKeys.map(cat => EXERCISES[cat].length));
+
+                for (let i = 0; i < maxExercises; i++) {
+                    for (let cat of categoryKeys) {
+                        if (EXERCISES[cat][i]) {
+                            rotation.push({ category: cat, index: i });
+                        }
+                    }
+                }
+
+                state.exerciseRotation = rotation;
+                saveState();
+            }
+        }
+
+        // Get today's exercise
+        function getTodayExercise() {
+            const daysSinceStart = state.completedSessions.length;
+            const rotationIndex = daysSinceStart % state.exerciseRotation.length;
+            const { category, index } = state.exerciseRotation[rotationIndex];
+            return { ...EXERCISES[category][index], category };
+        }
+
+        // Check if today's session is complete
+        function isTodayComplete() {
+            const today = new Date().toDateString();
+            return state.completedSessions.some(session =>
+                new Date(session.date).toDateString() === today
+            );
+        }
+
+        // Render today's exercise
+        function renderTodayExercise() {
+            const container = document.getElementById('exercise-content');
+            const categoryLabel = document.getElementById('today-category');
+
+            if (isTodayComplete()) {
+                container.innerHTML = `
+                    <div class="celebration">
+                        <div class="celebration-icon">✅</div>
+                        <div class="celebration-text">Session Complete</div>
+                        <div class="celebration-subtext">Training logged. Come back tomorrow.</div>
+                    </div>
+                `;
+                categoryLabel.textContent = 'Today\'s training complete';
+                return;
+            }
+
+            const exercise = getTodayExercise();
+            state.currentExercise = exercise;
+
+            categoryLabel.textContent = CATEGORIES[exercise.category].name;
+
+            const instructionsList = exercise.instructions
+                .map(inst => `<li>${inst}</li>`)
+                .join('');
+
+            const timingText = exercise.timing
+                ? `<p style="color: var(--text-secondary); margin-bottom: 12px;">⏱️ Estimated time: ${exercise.timing} minutes</p>`
+                : '';
+
+            container.innerHTML = `
+                <span class="exercise-category">${CATEGORIES[exercise.category].icon} ${CATEGORIES[exercise.category].name}</span>
+                <h2 style="margin: 16px 0 12px 0; font-size: 20px;">${exercise.name}</h2>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+                    ${exercise.description}
+                </p>
+                ${timingText}
+                <div class="exercise-instructions">
+                    <ol>${instructionsList}</ol>
+                </div>
+                ${exercise.name === 'Tactical Breathing' ? '<button class="btn btn-secondary" style="margin-bottom: 12px;" onclick="openEmergency()">Start Guided Breathing</button>' : ''}
+                <button class="btn" onclick="completeSession()">Mark Complete</button>
+            `;
+        }
+
+        // Complete today's session
+        function completeSession() {
+            const today = new Date();
+            state.completedSessions.push({
+                date: today.toISOString(),
+                category: state.currentExercise.category,
+                exercise: state.currentExercise.name
+            });
+
+            saveState();
+            renderTodayExercise();
+            updateStreak();
+            renderStats();
+
+            // Celebration animation
+            setTimeout(() => {
+                const celebration = document.querySelector('.celebration');
+                if (celebration) {
+                    celebration.style.animation = 'slideUp 0.5s ease';
+                }
+            }, 100);
+        }
+
+        // Calculate current streak
+        function calculateStreak() {
+            if (state.completedSessions.length === 0) return 0;
+
+            const sessions = [...state.completedSessions].sort((a, b) =>
+                new Date(b.date) - new Date(a.date)
+            );
+
+            let streak = 0;
+            let currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+
+            for (let session of sessions) {
+                const sessionDate = new Date(session.date);
+                sessionDate.setHours(0, 0, 0, 0);
+
+                const diffDays = Math.floor((currentDate - sessionDate) / (1000 * 60 * 60 * 24));
+
+                if (diffDays === streak || diffDays === streak + 1) {
+                    if (diffDays === streak + 1) streak++;
+                } else {
+                    break;
+                }
+            }
+
+            return streak;
+        }
+
+        // Update streak display
+        function updateStreak() {
+            const streak = calculateStreak();
+            document.getElementById('streak-badge').textContent = `${streak}🔥`;
+        }
+
+        // Render ladder
+        function renderLadder() {
+            const container = document.getElementById('ladder-list');
+
+            if (state.exposureLadder.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <p>No exposure items yet. Add work situations that trigger anxiety.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by anxiety rating (highest first)
+            const sorted = [...state.exposureLadder].sort((a, b) => b.rating - a.rating);
+
+            container.innerHTML = sorted.map((item, idx) => `
+                <div class="ladder-item">
+                    <div class="ladder-item-header">
+                        <div class="ladder-item-text">
+                            ${item.situation}
+                        </div>
+                        <div class="ladder-item-rating">${item.rating}</div>
+                    </div>
+                    <div class="ladder-item-attempts">
+                        ${item.attempts.length} exposure${item.attempts.length !== 1 ? 's' : ''} logged
+                    </div>
+                    <div class="ladder-item-actions">
+                        <button class="btn-icon" onclick="showLogExposure(${idx})">Log Exposure</button>
+                        <button class="btn-icon" onclick="viewAttempts(${idx})">View Log</button>
+                        <button class="btn-icon" onclick="deleteLadderItem(${idx})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render stats
+        function renderStats() {
+            // Total sessions
+            document.getElementById('total-sessions').textContent = state.completedSessions.length;
+
+            // Current streak
+            document.getElementById('current-streak').textContent = calculateStreak();
+
+            // Exposure count
+            const totalExposures = state.exposureLadder.reduce((sum, item) => sum + item.attempts.length, 0);
+            document.getElementById('exposure-count').textContent = totalExposures;
+
+            // Incident count
+            document.getElementById('incident-count').textContent = state.incidents.length;
+
+            // Category stats
+            const categoryCount = {};
+            Object.keys(CATEGORIES).forEach(cat => categoryCount[cat] = 0);
+            state.completedSessions.forEach(session => {
+                if (categoryCount[session.category] !== undefined) {
+                    categoryCount[session.category]++;
+                }
+            });
+
+            const categoryHTML = Object.keys(CATEGORIES).map(cat => `
+                <div class="category-badge">
+                    ${CATEGORIES[cat].icon} ${CATEGORIES[cat].name}
+                    <span class="category-badge-count">${categoryCount[cat]}</span>
+                </div>
+            `).join('');
+            document.getElementById('category-stats').innerHTML = categoryHTML;
+
+            // Calendar heatmap (last 28 days)
+            renderCalendar();
+
+            // Workability history
+            renderWorkabilityHistory();
+
+            // Incident history
+            renderIncidentHistory();
+        }
+
+        // Render calendar heatmap
+        function renderCalendar() {
+            const container = document.getElementById('calendar-heatmap');
+            const days = [];
+            const today = new Date();
+
+            for (let i = 27; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                date.setHours(0, 0, 0, 0);
+
+                const hasSession = state.completedSessions.some(session => {
+                    const sessionDate = new Date(session.date);
+                    sessionDate.setHours(0, 0, 0, 0);
+                    return sessionDate.getTime() === date.getTime();
+                });
+
+                days.push(`<div class="calendar-day ${hasSession ? 'active' : ''}"></div>`);
+            }
+
+            container.innerHTML = days.join('');
+        }
+
+        // Render workability history
+        function renderWorkabilityHistory() {
+            const container = document.getElementById('workability-history');
+
+            if (state.workabilityRatings.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px;">No ratings logged yet</p>';
+                return;
+            }
+
+            const sorted = [...state.workabilityRatings].sort((a, b) =>
+                new Date(b.date) - new Date(a.date)
+            ).slice(0, 5);
+
+            container.innerHTML = sorted.map(rating => {
+                const date = new Date(rating.date).toLocaleDateString();
+                return `
+                    <div class="log-entry">
+                        <div class="log-date">${date}</div>
+                        <div class="log-text">Workability: ${rating.rating}/10</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render incident history
+        function renderIncidentHistory() {
+            const container = document.getElementById('incident-history');
+
+            if (state.incidents.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px;">No incidents logged</p>';
+                return;
+            }
+
+            const sorted = [...state.incidents].sort((a, b) =>
+                new Date(b.date) - new Date(a.date)
+            ).slice(0, 5);
+
+            container.innerHTML = sorted.map(incident => {
+                const date = new Date(incident.date).toLocaleDateString();
+                return `
+                    <div class="log-entry">
+                        <div class="log-date">${date}</div>
+                        <div class="log-text">${incident.trigger}</div>
+                        ${incident.note ? `<div style="font-size: 13px; color: var(--text-dim); margin-top: 4px;">${incident.note}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Navigation
+        function switchView(view) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            document.getElementById(`${view}-view`).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            // Update header
+            const titles = {
+                train: 'MFT',
+                ladder: 'Exposure Ladder',
+                stats: 'Performance Stats'
+            };
+            document.getElementById('header-title').textContent = titles[view];
+
+            // Refresh content
+            if (view === 'ladder') renderLadder();
+            if (view === 'stats') renderStats();
+        }
+
+        // Emergency breathing modal
+        function openEmergency() {
+            document.getElementById('emergency-modal').classList.add('active');
+            resetBreathing();
+        }
+
+        function closeEmergency() {
+            document.getElementById('emergency-modal').classList.remove('active');
+            stopBreathing();
+        }
+
+        function resetBreathing() {
+            stopBreathing();
+            document.getElementById('breathing-circle').textContent = 'READY';
+            document.getElementById('breathing-circle').className = 'breathing-circle';
+            document.getElementById('breathing-instruction').textContent = 'Tap Start when ready';
+            document.getElementById('breathing-btn').textContent = 'START';
+            document.getElementById('breathing-btn').onclick = startBreathing;
+        }
+
+        function startBreathing() {
+            state.breathingPhase = 0;
+            const phases = [
+                { text: 'IN', instruction: 'Breathe in through nose', class: 'expand', duration: 4000 },
+                { text: 'HOLD', instruction: 'Hold breath', class: 'expand', duration: 4000 },
+                { text: 'OUT', instruction: 'Breathe out through mouth', class: 'contract', duration: 4000 },
+                { text: 'HOLD', instruction: 'Hold empty', class: 'contract', duration: 4000 }
+            ];
+
+            let cycle = 0;
+            const maxCycles = 4;
+
+            function nextPhase() {
+                if (cycle >= maxCycles) {
+                    document.getElementById('breathing-circle').textContent = 'DONE';
+                    document.getElementById('breathing-circle').className = 'breathing-circle';
+                    document.getElementById('breathing-instruction').textContent = 'Complete. Notice how you feel.';
+                    document.getElementById('breathing-btn').textContent = 'CLOSE';
+                    document.getElementById('breathing-btn').onclick = closeEmergency;
+                    return;
+                }
+
+                const phase = phases[state.breathingPhase];
+                document.getElementById('breathing-circle').textContent = phase.text;
+                document.getElementById('breathing-circle').className = `breathing-circle ${phase.class}`;
+                document.getElementById('breathing-instruction').textContent = phase.instruction;
+
+                state.breathingPhase++;
+                if (state.breathingPhase >= phases.length) {
+                    state.breathingPhase = 0;
+                    cycle++;
+                }
+
+                state.breathingInterval = setTimeout(nextPhase, phase.duration);
+            }
+
+            document.getElementById('breathing-btn').textContent = 'STOP';
+            document.getElementById('breathing-btn').onclick = resetBreathing;
+
+            nextPhase();
+        }
+
+        function stopBreathing() {
+            if (state.breathingInterval) {
+                clearTimeout(state.breathingInterval);
+                state.breathingInterval = null;
+            }
+        }
+
+        // Ladder functions
+        function showAddLadderItem() {
+            document.getElementById('ladder-modal').classList.add('active');
+            document.getElementById('ladder-situation').value = '';
+            document.getElementById('ladder-rating').value = 5;
+            document.getElementById('ladder-rating-value').textContent = '5';
+        }
+
+        function closeLadderModal() {
+            document.getElementById('ladder-modal').classList.remove('active');
+        }
+
+        function addLadderItem() {
+            const situation = document.getElementById('ladder-situation').value.trim();
+            const rating = parseInt(document.getElementById('ladder-rating').value);
+
+            if (!situation) {
+                alert('Please enter a situation');
+                return;
+            }
+
+            state.exposureLadder.push({
+                situation,
+                rating,
+                attempts: [],
+                created: new Date().toISOString()
+            });
+
+            saveState();
+            closeLadderModal();
+            renderLadder();
+        }
+
+        function showLogExposure(index) {
+            const sorted = [...state.exposureLadder].sort((a, b) => b.rating - a.rating);
+            const item = sorted[index];
+            const originalIndex = state.exposureLadder.indexOf(item);
+
+            state.currentLadderItem = originalIndex;
+            document.getElementById('exposure-situation').textContent = item.situation;
+            document.getElementById('exposure-note').value = '';
+            document.getElementById('exposure-modal').classList.add('active');
+        }
+
+        function closeExposureModal() {
+            document.getElementById('exposure-modal').classList.remove('active');
+            state.currentLadderItem = null;
+        }
+
+        function logExposure() {
+            if (state.currentLadderItem === null) return;
+
+            const note = document.getElementById('exposure-note').value.trim();
+
+            state.exposureLadder[state.currentLadderItem].attempts.push({
+                date: new Date().toISOString(),
+                note
+            });
+
+            saveState();
+            closeExposureModal();
+            renderLadder();
+            renderStats();
+        }
+
+        function viewAttempts(index) {
+            const sorted = [...state.exposureLadder].sort((a, b) => b.rating - a.rating);
+            const item = sorted[index];
+
+            if (item.attempts.length === 0) {
+                alert('No exposure attempts logged yet');
+                return;
+            }
+
+            const attemptsList = item.attempts
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .map(att => {
+                    const date = new Date(att.date).toLocaleDateString();
+                    return `<div class="log-entry">
+                        <div class="log-date">${date}</div>
+                        ${att.note ? `<div class="log-text">${att.note}</div>` : '<div class="log-text" style="color: var(--text-dim);">No note</div>'}
+                    </div>`;
+                })
+                .join('');
+
+            const modalContent = `
+                <div class="modal-header">
+                    <div class="modal-title">Exposure Log</div>
+                    <button class="close-btn" onclick="closeViewModal()">×</button>
+                </div>
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                    <strong>${item.situation}</strong> (Anxiety: ${item.rating}/10)
+                </p>
+                <div style="margin-top: 16px;">${attemptsList}</div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.id = 'view-modal';
+            modal.className = 'modal active';
+            modal.innerHTML = `<div class="modal-content">${modalContent}</div>`;
+            document.body.appendChild(modal);
+        }
+
+        function closeViewModal() {
+            const modal = document.getElementById('view-modal');
+            if (modal) modal.remove();
+        }
+
+        function deleteLadderItem(index) {
+            if (!confirm('Delete this exposure item?')) return;
+
+            const sorted = [...state.exposureLadder].sort((a, b) => b.rating - a.rating);
+            const item = sorted[index];
+            const originalIndex = state.exposureLadder.indexOf(item);
+
+            state.exposureLadder.splice(originalIndex, 1);
+            saveState();
+            renderLadder();
+            renderStats();
+        }
+
+        // Workability rating
+        function showWorkabilityRating() {
+            // Check if already rated today
+            const today = new Date().toDateString();
+            const alreadyRated = state.workabilityRatings.some(r =>
+                new Date(r.date).toDateString() === today
+            );
+
+            if (alreadyRated) {
+                alert('Already logged workability for today');
+                return;
+            }
+
+            state.selectedWorkability = null;
+
+            const buttons = [];
+            for (let i = 1; i <= 10; i++) {
+                buttons.push(`<button class="rating-btn" onclick="selectWorkability(${i})">${i}</button>`);
+            }
+            document.getElementById('workability-buttons').innerHTML = buttons.join('');
+            document.getElementById('workability-modal').classList.add('active');
+        }
+
+        function selectWorkability(rating) {
+            state.selectedWorkability = rating;
+            document.querySelectorAll('#workability-buttons .rating-btn').forEach((btn, idx) => {
+                btn.classList.toggle('selected', idx + 1 === rating);
+            });
+        }
+
+        function saveWorkability() {
+            if (!state.selectedWorkability) {
+                alert('Please select a rating');
+                return;
+            }
+
+            state.workabilityRatings.push({
+                date: new Date().toISOString(),
+                rating: state.selectedWorkability
+            });
+
+            saveState();
+            closeWorkabilityModal();
+            renderStats();
+        }
+
+        function closeWorkabilityModal() {
+            document.getElementById('workability-modal').classList.remove('active');
+        }
+
+        // Incident logging
+        function showIncidentLog() {
+            document.getElementById('incident-trigger').value = '';
+            document.getElementById('incident-note').value = '';
+            document.getElementById('incident-modal').classList.add('active');
+        }
+
+        function closeIncidentModal() {
+            document.getElementById('incident-modal').classList.remove('active');
+        }
+
+        function logIncident() {
+            const trigger = document.getElementById('incident-trigger').value.trim();
+
+            if (!trigger) {
+                alert('Please enter what triggered the incident');
+                return;
+            }
+
+            const note = document.getElementById('incident-note').value.trim();
+
+            state.incidents.push({
+                date: new Date().toISOString(),
+                trigger,
+                note
+            });
+
+            saveState();
+            closeIncidentModal();
+            renderStats();
+        }
+
+        // State persistence
+        function saveState() {
+            localStorage.setItem('mft-state', JSON.stringify(state));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('mft-state');
+            if (saved) {
+                state = { ...state, ...JSON.parse(saved) };
+            }
+        }
+
+        // PWA Manifest
+        function setupManifest() {
+            const manifest = {
+                name: "Mental Fitness Training",
+                short_name: "MFT",
+                description: "ACT-based mental conditioning program",
+                start_url: window.location.pathname,
+                display: "standalone",
+                orientation: "portrait",
+                background_color: "#0a0a0a",
+                theme_color: "#111111",
+                icons: [
+                    {
+                        src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23111'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='280' fill='%2300ff88'%3E💪%3C/text%3E%3C/svg%3E",
+                        sizes: "512x512",
+                        type: "image/svg+xml"
+                    }
+                ]
+            };
+
+            const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+            const manifestURL = URL.createObjectURL(manifestBlob);
+            document.getElementById('manifest-placeholder').setAttribute('href', manifestURL);
+        }
+
+        // Service Worker for offline support
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', (event) => {
+                    self.skipWaiting();
+                });
+
+                self.addEventListener('fetch', (event) => {
+                    event.respondWith(
+                        caches.match(event.request).then((response) => {
+                            return response || fetch(event.request);
+                        })
+                    );
+                });
+            `;
+
+            const swBlob = new Blob([swCode], { type: 'application/javascript' });
+            const swURL = URL.createObjectURL(swBlob);
+
+            navigator.serviceWorker.register(swURL).catch(() => {
+                // Service worker registration failed, but app still works
+            });
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+
+        // Prevent pull-to-refresh on mobile
+        document.body.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 1) return;
+            e.preventDefault();
+        }, { passive: false });
+    </script>
+</body>
+</html>
