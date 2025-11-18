@@ -833,8 +833,8 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-title">Anxiety & Stress Trends</div>
-                    <div class="card-subtitle">Last 30 days</div>
+                    <div class="card-title">Performance Metrics</div>
+                    <div class="card-subtitle">Anxiety, Stress & Willingness - Last 30 days</div>
                     <canvas id="anxiety-chart" style="max-height: 250px;"></canvas>
                 </div>
 
@@ -1059,6 +1059,34 @@
                         'Continue working while carrying these lighter descriptions'
                     ],
                     timing: 5
+                },
+                {
+                    name: 'Unhooking Your Judgmental Mind',
+                    description: 'Recognize anxious thoughts as barbless hooks you can let go of instead of struggling with.',
+                    instructions: [
+                        'Notice when you\'ve "bitten" on an anxious thought ("I\'m out of control," "I\'m a failure")',
+                        'Recognize the thought as a fly/hook your mind has cast',
+                        'Observe that the hook has no barbs - you CAN let go',
+                        'Pause the struggle and look at the hook more closely',
+                        'Choose to unhook - let the thought float by without biting',
+                        'Move on with your day, knowing more flies will come'
+                    ],
+                    timing: 3
+                },
+                {
+                    name: 'Demoting Your WAF Mind Playfully',
+                    description: 'Repeat an anxiety word for 40 seconds until it loses emotional meaning. WAF = Worries, Anxieties, and Fears.',
+                    instructions: [
+                        'Pick one anxiety word: "panic," "worthless," "anxiety," "fear"',
+                        'Set timer for 40 seconds',
+                        'Say the word rapidly out loud: "panic panic panic panic..."',
+                        'Notice the word dissolving into meaningless sound',
+                        'Observe emotional charge diminishing',
+                        'Try variations: slow motion, funny voice, sing it'
+                    ],
+                    timing: 2,
+                    hasTimer: true,
+                    timerDuration: 40
                 }
             ],
             acceptance: [
@@ -1129,6 +1157,115 @@
                         'Notice this neutralizes triggers over time'
                     ],
                     timing: 6
+                },
+                {
+                    name: 'Grounding in the Now',
+                    description: 'Ground yourself in the present through feet connection with earth.',
+                    instructions: [
+                        'Remove shoes, sit upright (or stand with knees bent)',
+                        'Close eyes, notice your breath',
+                        'Bring attention to feet contacting the floor',
+                        'Wiggle toes, scrunch feet into balls',
+                        'Press feet into ground, then ease up',
+                        'Imagine breathing IN through the soles of your feet',
+                        'Exhale OUT through feet (creating roots)',
+                        'When mind wanders, return to feet and earth connection'
+                    ],
+                    timing: 5
+                },
+                {
+                    name: 'Stuck Stirring a Bucket',
+                    description: 'Metaphor: dwelling on past keeps you stuck. No amount of stirring turns shit into ice cream.',
+                    instructions: [
+                        'Imagine sitting next to a large bucket (your past)',
+                        'The lid pops off - it\'s full of shit and smells awful',
+                        'Notice yourself stirring it, hoping to make it better',
+                        'Recognize: stirring doesn\'t help, just makes it stink more',
+                        'Acknowledge the past AS the past - it can\'t be changed',
+                        'Drop the ladle, stop stirring',
+                        'Refocus on NOW - what matters in the present moment'
+                    ],
+                    timing: 4
+                },
+                {
+                    name: 'Hyperventilation Training',
+                    description: 'Deliberately induce anxiety sensations to build tolerance. Practice acceptance of physical discomfort.',
+                    instructions: [
+                        'Sit down, have timer ready',
+                        'Take deep breath in, exhale fully',
+                        'Repeat rapidly: 1 breath every 2 seconds',
+                        'Continue for 60 seconds minimum',
+                        'Observe lightheadedness, tingling, racing heart',
+                        'Practice accepting these sensations',
+                        'Breathe normally after, notice sensations fading'
+                    ],
+                    timing: 2,
+                    hasTimer: true,
+                    timerDuration: 60,
+                    warning: 'May cause dizziness. Stop if severe discomfort.'
+                },
+                {
+                    name: 'Breath Hold Training',
+                    description: 'Build tolerance for air hunger and chest tightness sensations.',
+                    instructions: [
+                        'Sit with eyes open',
+                        'Take deep breath in',
+                        'Hold as long as you can',
+                        'Notice urge to breathe, chest tightness',
+                        'Release when needed, observe sensations',
+                        'Rest 30 seconds, repeat 2-3 times',
+                        'Practice accepting the discomfort'
+                    ],
+                    timing: 3,
+                    hasTimer: true
+                },
+                {
+                    name: 'Spinning Dizziness Training',
+                    description: 'Induce dizziness to practice accepting uncomfortable sensations.',
+                    instructions: [
+                        'Stand in clear space with arms outstretched',
+                        'Spin in circles for 30 seconds',
+                        'Stop and stand still',
+                        'Observe dizziness without resisting',
+                        'Notice the sensation peaks then fades',
+                        'Alternative: spin in swivel chair if standing unsafe',
+                        'Rest, then repeat if willing'
+                    ],
+                    timing: 2,
+                    hasTimer: true,
+                    timerDuration: 30,
+                    warning: 'Ensure clear space. Stop if needed.'
+                },
+                {
+                    name: 'Aerobic Intensity Training',
+                    description: 'Running in place to trigger anxiety-like sensations. Build tolerance for racing heart and breathlessness.',
+                    instructions: [
+                        'Stand in clear space',
+                        'Jog vigorously in place',
+                        'Continue until heart racing and out of breath',
+                        'Keep going 30-60 seconds beyond first discomfort',
+                        'Stop and observe sensations mindfully',
+                        'Notice similarity to panic sensations',
+                        'Practice accepting without fighting'
+                    ],
+                    timing: 3,
+                    hasTimer: true
+                },
+                {
+                    name: 'Straw Breathing',
+                    description: 'Breathe only through straw to create air restriction. Builds tolerance for breathlessness.',
+                    instructions: [
+                        'Get a drinking straw',
+                        'Pinch nostrils closed with free hand',
+                        'Breathe ONLY through straw',
+                        'Continue 30+ seconds',
+                        'Observe chest tightness, air hunger',
+                        'Practice accepting the discomfort',
+                        'Remove straw, breathe normally'
+                    ],
+                    timing: 2,
+                    hasTimer: true,
+                    timerDuration: 30
                 }
             ],
             present: [
@@ -1341,6 +1478,24 @@
                         'Commit to trying new response pattern'
                     ],
                     timing: 15
+                },
+                {
+                    name: 'Driving Your Life Bus',
+                    description: 'You\'re the bus driver heading toward your values; anxious passengers can\'t stop you.',
+                    instructions: [
+                        'Identify your "Value Mountain" (where you want to go)',
+                        'You\'re the driver of your Life Bus',
+                        'Notice unruly passengers (anxious thoughts): "STOP! Don\'t go there!"',
+                        'Recognize when you\'ve stopped, let go of wheel, turned to argue',
+                        'Notice you\'ve gone off course (away from your values)',
+                        'Make choice: Keep arguing OR get back in driver\'s seat',
+                        'Turn back to wheel, restart engine',
+                        'Steer toward your Value Mountain',
+                        'Accept passengers will keep yelling - they can\'t stop you',
+                        'Keep hands on wheel, foot on accelerator, eyes on the road'
+                    ],
+                    timing: 7,
+                    requiresCompleted: 'Passengers on the Bus'
                 }
             ],
             context: [
@@ -1484,12 +1639,33 @@
             }
         }
 
+        // Check if exercise is unlocked
+        function isExerciseUnlocked(exercise) {
+            if (!exercise.requiresCompleted) return true;
+
+            // Check if required exercise has been completed
+            return state.completedSessions.some(session =>
+                session.exercise === exercise.requiresCompleted
+            );
+        }
+
         // Get today's exercise
         function getTodayExercise() {
             const daysSinceStart = state.completedSessions.length;
-            const rotationIndex = daysSinceStart % state.exerciseRotation.length;
-            const { category, index } = state.exerciseRotation[rotationIndex];
-            return { ...EXERCISES[category][index], category };
+            let rotationIndex = daysSinceStart % state.exerciseRotation.length;
+            let { category, index } = state.exerciseRotation[rotationIndex];
+            let exercise = { ...EXERCISES[category][index], category };
+
+            // Skip locked exercises
+            let attempts = 0;
+            while (!isExerciseUnlocked(exercise) && attempts < state.exerciseRotation.length) {
+                rotationIndex = (rotationIndex + 1) % state.exerciseRotation.length;
+                const next = state.exerciseRotation[rotationIndex];
+                exercise = { ...EXERCISES[next.category][next.index], category: next.category };
+                attempts++;
+            }
+
+            return exercise;
         }
 
         // Check if today's session is complete
@@ -2177,6 +2353,9 @@
                             <strong>Work Stress:</strong> <span class="slider-value">${todayCheckin.workStress}</span>
                         </div>
                         <div style="margin-bottom: 12px;">
+                            <strong>Willingness:</strong> <span class="slider-value">${todayCheckin.willingness || 'Not tracked'}</span>
+                        </div>
+                        <div style="margin-bottom: 12px;">
                             <strong>Skills Used:</strong> ${skillsList}
                         </div>
                         <div style="margin-bottom: 12px;">
@@ -2214,6 +2393,19 @@
                             <div class="range-label">
                                 <span>Low (0)</span>
                                 <span>High (10)</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Willingness: How willing were you to do hard things in service of what matters?
+                                <span class="slider-value" id="willingness-value">5</span>
+                            </label>
+                            <input type="range" id="willingness-slider" min="0" max="10" value="5"
+                                   oninput="document.getElementById('willingness-value').textContent = this.value">
+                            <div class="range-label">
+                                <span>Avoided (0)</span>
+                                <span>Fully Willing (10)</span>
                             </div>
                         </div>
 
@@ -2324,6 +2516,7 @@
 
             const anxietyLevel = parseInt(document.getElementById('anxiety-slider').value);
             const workStress = parseInt(document.getElementById('stress-slider').value);
+            const willingness = parseInt(document.getElementById('willingness-slider').value);
 
             const skillCheckboxes = document.querySelectorAll('input[name="skills"]:checked');
             const skillsUsed = Array.from(skillCheckboxes)
@@ -2338,6 +2531,7 @@
                 date: new Date().toISOString(),
                 anxietyLevel,
                 workStress,
+                willingness,
                 skillsUsed,
                 facedChallenges,
                 challengeNotes,
@@ -2387,6 +2581,19 @@
                         <div class="range-label">
                             <span>Low (0)</span>
                             <span>High (10)</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Willingness: How willing were you to do hard things in service of what matters?
+                            <span class="slider-value" id="willingness-value">${today.willingness || 5}</span>
+                        </label>
+                        <input type="range" id="willingness-slider" min="0" max="10" value="${today.willingness || 5}"
+                               oninput="document.getElementById('willingness-value').textContent = this.value">
+                        <div class="range-label">
+                            <span>Avoided (0)</span>
+                            <span>Fully Willing (10)</span>
                         </div>
                     </div>
 
@@ -2510,6 +2717,15 @@
                 return checkin ? checkin.workStress : null;
             });
 
+            const willingnessData = last30Days.map(date => {
+                const checkin = state.checkIns.find(c => {
+                    const checkinDate = new Date(c.date);
+                    checkinDate.setHours(0, 0, 0, 0);
+                    return checkinDate.getTime() === date.getTime();
+                });
+                return checkin && checkin.willingness !== undefined ? checkin.willingness : null;
+            });
+
             const labels = last30Days.map(d => {
                 const month = d.getMonth() + 1;
                 const day = d.getDate();
@@ -2532,6 +2748,13 @@
                         data: stressData,
                         borderColor: '#00ff88',
                         backgroundColor: 'rgba(0, 255, 136, 0.1)',
+                        tension: 0.3,
+                        spanGaps: true
+                    }, {
+                        label: 'Willingness',
+                        data: willingnessData,
+                        borderColor: '#4488ff',
+                        backgroundColor: 'rgba(68, 136, 255, 0.1)',
                         tension: 0.3,
                         spanGaps: true
                     }]
