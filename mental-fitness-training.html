@@ -2250,16 +2250,21 @@
 
         // State persistence
         function saveState() {
-            // Only save serializable data, exclude charts and runtime state
-            const saveData = {
-                exerciseRotation: state.exerciseRotation,
-                completedSessions: state.completedSessions,
-                exposureLadder: state.exposureLadder,
-                workabilityRatings: state.workabilityRatings,
-                incidents: state.incidents,
-                checkIns: state.checkIns
-            };
-            localStorage.setItem('mft-state', JSON.stringify(saveData));
+            try {
+                // Only save serializable data, exclude charts and runtime state
+                const saveData = {
+                    exerciseRotation: state.exerciseRotation,
+                    completedSessions: state.completedSessions,
+                    exposureLadder: state.exposureLadder,
+                    workabilityRatings: state.workabilityRatings,
+                    incidents: state.incidents,
+                    checkIns: state.checkIns
+                };
+                localStorage.setItem('mft-state', JSON.stringify(saveData));
+            } catch (error) {
+                console.error('Error saving state:', error);
+                // Don't alert here as this is called frequently
+            }
         }
 
         function loadState() {
@@ -2278,33 +2283,39 @@
 
         // Data export/import functions
         function exportData() {
-            const exportData = {
-                version: '1.0',
-                exportDate: new Date().toISOString(),
-                data: {
-                    completedSessions: state.completedSessions,
-                    exposureLadder: state.exposureLadder,
-                    workabilityRatings: state.workabilityRatings,
-                    incidents: state.incidents,
-                    checkIns: state.checkIns,
-                    exerciseRotation: state.exerciseRotation
-                }
-            };
+            try {
+                // Create clean copy of data to ensure no circular references
+                const exportData = {
+                    version: '1.0',
+                    exportDate: new Date().toISOString(),
+                    data: {
+                        completedSessions: JSON.parse(JSON.stringify(state.completedSessions || [])),
+                        exposureLadder: JSON.parse(JSON.stringify(state.exposureLadder || [])),
+                        workabilityRatings: JSON.parse(JSON.stringify(state.workabilityRatings || [])),
+                        incidents: JSON.parse(JSON.stringify(state.incidents || [])),
+                        checkIns: JSON.parse(JSON.stringify(state.checkIns || [])),
+                        exerciseRotation: JSON.parse(JSON.stringify(state.exerciseRotation || []))
+                    }
+                };
 
-            const dataStr = JSON.stringify(exportData, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
 
-            const link = document.createElement('a');
-            link.href = url;
-            const timestamp = new Date().toISOString().slice(0, 10);
-            link.download = `mft-backup-${timestamp}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+                const link = document.createElement('a');
+                link.href = url;
+                const timestamp = new Date().toISOString().slice(0, 10);
+                link.download = `mft-backup-${timestamp}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
 
-            alert('✅ Backup exported successfully!\n\nFile saved to your downloads.');
+                alert('✅ Backup exported successfully!\n\nFile saved to your downloads.');
+            } catch (error) {
+                alert('❌ Error exporting data:\n\n' + error.message + '\n\nYour data is still safe in the app.');
+                console.error('Export error:', error);
+            }
         }
 
         function importData(event) {
