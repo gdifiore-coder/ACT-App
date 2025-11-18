@@ -873,6 +873,11 @@
                 <div class="card">
                     <div class="card-title">Data Management</div>
                     <div class="card-subtitle">Backup and restore your progress</div>
+
+                    <button class="btn btn-secondary btn-small" onclick="exportCSV()" style="margin-bottom: 12px;">
+                        📊 Download Report (Excel/CSV)
+                    </button>
+
                     <div style="display: flex; gap: 8px; margin-bottom: 12px;">
                         <button class="btn btn-secondary btn-small" onclick="exportData()" style="flex: 1;">
                             📥 Export Backup
@@ -886,7 +891,9 @@
                         🗑️ Clear All Data
                     </button>
                     <p style="font-size: 12px; color: var(--text-dim); margin-top: 12px; font-style: italic;">
-                        Export saves all training sessions, check-ins, exposure ladder, and stats to a file. Import restores from backup.
+                        <strong>CSV Report:</strong> Opens in Excel/Sheets for analysis.<br>
+                        <strong>Backup (JSON):</strong> For importing back into app.<br>
+                        <strong>Clear Data:</strong> Permanent deletion.
                     </p>
                 </div>
             </div>
@@ -2315,6 +2322,113 @@
             } catch (error) {
                 alert('❌ Error exporting data:\n\n' + error.message + '\n\nYour data is still safe in the app.');
                 console.error('Export error:', error);
+            }
+        }
+
+        function exportCSV() {
+            try {
+                let csv = '';
+                const timestamp = new Date().toISOString().slice(0, 10);
+
+                // SECTION 1: Summary
+                csv += 'MENTAL FITNESS TRAINING - PROGRESS REPORT\n';
+                csv += `Generated: ${new Date().toLocaleDateString()}\n`;
+                csv += '\n';
+                csv += 'SUMMARY\n';
+                csv += `Total Training Sessions,${state.completedSessions.length}\n`;
+                csv += `Current Streak (days),${calculateStreak()}\n`;
+                csv += `Total Check-ins,${state.checkIns.length}\n`;
+                csv += `Exposure Attempts,${state.exposureLadder.reduce((sum, item) => sum + item.attempts.length, 0)}\n`;
+                csv += `Work Incidents,${state.incidents.length}\n`;
+                csv += '\n\n';
+
+                // SECTION 2: Daily Check-ins
+                csv += 'DAILY CHECK-INS\n';
+                csv += 'Date,Anxiety (0-10),Work Stress (0-10),Willingness (0-10),Skills Used,Faced Challenges,Challenge Notes,Additional Notes\n';
+
+                const sortedCheckins = [...state.checkIns].sort((a, b) => new Date(a.date) - new Date(b.date));
+                sortedCheckins.forEach(checkin => {
+                    const date = new Date(checkin.date).toLocaleDateString();
+                    const skillsList = (checkin.skillsUsed || []).map(s => CATEGORIES[s]?.name || s).join('; ');
+                    const challenges = checkin.facedChallenges ? 'Yes' : 'No';
+                    const challengeNotes = (checkin.challengeNotes || '').replace(/,/g, ';').replace(/\n/g, ' ');
+                    const notes = (checkin.notes || '').replace(/,/g, ';').replace(/\n/g, ' ');
+                    const willingness = checkin.willingness !== undefined ? checkin.willingness : '';
+
+                    csv += `${date},${checkin.anxietyLevel},${checkin.workStress},${willingness},"${skillsList}",${challenges},"${challengeNotes}","${notes}"\n`;
+                });
+                csv += '\n\n';
+
+                // SECTION 3: Training Sessions
+                csv += 'TRAINING SESSIONS\n';
+                csv += 'Date,Category,Exercise\n';
+
+                const sortedSessions = [...state.completedSessions].sort((a, b) => new Date(a.date) - new Date(b.date));
+                sortedSessions.forEach(session => {
+                    const date = new Date(session.date).toLocaleDateString();
+                    const category = CATEGORIES[session.category]?.name || session.category;
+                    const exercise = (session.exercise || '').replace(/,/g, ';');
+                    csv += `${date},"${category}","${exercise}"\n`;
+                });
+                csv += '\n\n';
+
+                // SECTION 4: Exposure Ladder
+                csv += 'EXPOSURE LADDER\n';
+                csv += 'Situation,Anxiety Rating (0-10),Total Attempts,Last Attempt Date\n';
+
+                state.exposureLadder.forEach(item => {
+                    const situation = (item.situation || '').replace(/,/g, ';').replace(/\n/g, ' ');
+                    const attempts = item.attempts.length;
+                    const lastAttempt = attempts > 0
+                        ? new Date(item.attempts[item.attempts.length - 1].date).toLocaleDateString()
+                        : 'Never';
+                    csv += `"${situation}",${item.rating},${attempts},${lastAttempt}\n`;
+                });
+                csv += '\n\n';
+
+                // SECTION 5: Work Incidents
+                csv += 'WORK INCIDENTS\n';
+                csv += 'Date,Trigger,Notes\n';
+
+                const sortedIncidents = [...state.incidents].sort((a, b) => new Date(a.date) - new Date(b.date));
+                sortedIncidents.forEach(incident => {
+                    const date = new Date(incident.date).toLocaleDateString();
+                    const trigger = (incident.trigger || '').replace(/,/g, ';').replace(/\n/g, ' ');
+                    const notes = (incident.note || '').replace(/,/g, ';').replace(/\n/g, ' ');
+                    csv += `${date},"${trigger}","${notes}"\n`;
+                });
+                csv += '\n\n';
+
+                // SECTION 6: Category Breakdown
+                csv += 'TRAINING BY CATEGORY\n';
+                csv += 'Category,Sessions Completed\n';
+
+                const categoryCount = {};
+                Object.keys(CATEGORIES).forEach(cat => categoryCount[cat] = 0);
+                state.completedSessions.forEach(session => {
+                    if (categoryCount[session.category] !== undefined) {
+                        categoryCount[session.category]++;
+                    }
+                });
+                Object.keys(CATEGORIES).forEach(cat => {
+                    csv += `${CATEGORIES[cat].name},${categoryCount[cat]}\n`;
+                });
+
+                // Create download
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `mft-report-${timestamp}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                alert('✅ Report exported successfully!\n\nOpen the CSV file in Excel or Google Sheets to view your progress.');
+            } catch (error) {
+                alert('❌ Error creating report:\n\n' + error.message);
+                console.error('CSV export error:', error);
             }
         }
 
