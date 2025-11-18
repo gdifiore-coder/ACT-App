@@ -2222,11 +2222,15 @@
                             <div class="form-note">Select all that apply</div>
                             <div class="checkbox-group">
                                 ${Object.keys(CATEGORIES).map(key => `
-                                    <label class="checkbox-item" onclick="toggleCheckbox(this)">
+                                    <label class="checkbox-item" onclick="toggleSkillCheckbox(this, false)">
                                         <input type="checkbox" name="skills" value="${key}">
                                         <span class="checkbox-label">${CATEGORIES[key].icon} ${CATEGORIES[key].name}</span>
                                     </label>
                                 `).join('')}
+                                <label class="checkbox-item" onclick="toggleSkillCheckbox(this, true)">
+                                    <input type="checkbox" name="skills" value="none">
+                                    <span class="checkbox-label">⊘ None - didn't use skills today</span>
+                                </label>
                             </div>
                         </div>
 
@@ -2270,6 +2274,35 @@
             }, 0);
         }
 
+        // Toggle skill checkbox with "None" exclusivity logic
+        function toggleSkillCheckbox(label, isNone) {
+            setTimeout(() => {
+                const checkbox = label.querySelector('input[type="checkbox"]');
+
+                // Update visual styling
+                if (checkbox.checked) {
+                    label.classList.add('checked');
+
+                    // If "None" was checked, uncheck all other skills
+                    if (isNone) {
+                        document.querySelectorAll('input[name="skills"]:not([value="none"])').forEach(cb => {
+                            cb.checked = false;
+                            cb.closest('.checkbox-item').classList.remove('checked');
+                        });
+                    } else {
+                        // If any skill was checked, uncheck "None"
+                        const noneCheckbox = document.querySelector('input[name="skills"][value="none"]');
+                        if (noneCheckbox) {
+                            noneCheckbox.checked = false;
+                            noneCheckbox.closest('.checkbox-item').classList.remove('checked');
+                        }
+                    }
+                } else {
+                    label.classList.remove('checked');
+                }
+            }, 0);
+        }
+
         // Toggle challenge notes visibility
         function toggleChallengeNotes() {
             const toggle = document.getElementById('challenges-toggle');
@@ -2293,7 +2326,9 @@
             const workStress = parseInt(document.getElementById('stress-slider').value);
 
             const skillCheckboxes = document.querySelectorAll('input[name="skills"]:checked');
-            const skillsUsed = Array.from(skillCheckboxes).map(cb => cb.value);
+            const skillsUsed = Array.from(skillCheckboxes)
+                .map(cb => cb.value)
+                .filter(val => val !== 'none'); // Filter out "none" option
 
             const facedChallenges = document.getElementById('challenges-toggle').checked;
             const challengeNotes = facedChallenges ? document.getElementById('challenge-notes').value.trim() : '';
@@ -2360,11 +2395,15 @@
                         <div class="form-note">Select all that apply</div>
                         <div class="checkbox-group">
                             ${Object.keys(CATEGORIES).map(key => `
-                                <label class="checkbox-item ${today.skillsUsed.includes(key) ? 'checked' : ''}" onclick="toggleCheckbox(this)">
+                                <label class="checkbox-item ${today.skillsUsed.includes(key) ? 'checked' : ''}" onclick="toggleSkillCheckbox(this, false)">
                                     <input type="checkbox" name="skills" value="${key}" ${today.skillsUsed.includes(key) ? 'checked' : ''}>
                                     <span class="checkbox-label">${CATEGORIES[key].icon} ${CATEGORIES[key].name}</span>
                                 </label>
                             `).join('')}
+                            <label class="checkbox-item ${today.skillsUsed.includes('none') ? 'checked' : ''}" onclick="toggleSkillCheckbox(this, true)">
+                                <input type="checkbox" name="skills" value="none" ${today.skillsUsed.includes('none') ? 'checked' : ''}>
+                                <span class="checkbox-label">⊘ None - didn't use skills today</span>
+                            </label>
                         </div>
                     </div>
 
