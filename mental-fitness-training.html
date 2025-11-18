@@ -1913,10 +1913,21 @@
         // Initialize on load
         window.addEventListener('DOMContentLoaded', init);
 
-        // Prevent pull-to-refresh on mobile
+        // Prevent pull-to-refresh only at top of page
+        let lastTouchY = 0;
+        document.body.addEventListener('touchstart', (e) => {
+            lastTouchY = e.touches[0].clientY;
+        }, { passive: true });
+
         document.body.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 1) return;
-            e.preventDefault();
+            const touchY = e.touches[0].clientY;
+            const touchYDelta = touchY - lastTouchY;
+            lastTouchY = touchY;
+
+            // Only prevent if at top of page and pulling down
+            if (window.scrollY === 0 && touchYDelta > 0) {
+                e.preventDefault();
+            }
         }, { passive: false });
     </script>
 </body>
