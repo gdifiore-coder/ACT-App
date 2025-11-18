@@ -869,6 +869,26 @@
                     <button class="btn btn-secondary btn-small" onclick="showIncidentLog()">Log Incident</button>
                     <div id="incident-history" style="margin-top: 16px;"></div>
                 </div>
+
+                <div class="card">
+                    <div class="card-title">Data Management</div>
+                    <div class="card-subtitle">Backup and restore your progress</div>
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <button class="btn btn-secondary btn-small" onclick="exportData()" style="flex: 1;">
+                            📥 Export Backup
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="document.getElementById('import-file').click()" style="flex: 1;">
+                            📤 Import Backup
+                        </button>
+                    </div>
+                    <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importData(event)">
+                    <button class="btn btn-secondary btn-small" onclick="confirmClearData()" style="background: var(--bg-input); color: var(--danger); border-color: var(--danger);">
+                        🗑️ Clear All Data
+                    </button>
+                    <p style="font-size: 12px; color: var(--text-dim); margin-top: 12px; font-style: italic;">
+                        Export saves all training sessions, check-ins, exposure ladder, and stats to a file. Import restores from backup.
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -2238,6 +2258,118 @@
             if (saved) {
                 state = { ...state, ...JSON.parse(saved) };
             }
+        }
+
+        // Data export/import functions
+        function exportData() {
+            const exportData = {
+                version: '1.0',
+                exportDate: new Date().toISOString(),
+                data: {
+                    completedSessions: state.completedSessions,
+                    exposureLadder: state.exposureLadder,
+                    workabilityRatings: state.workabilityRatings,
+                    incidents: state.incidents,
+                    checkIns: state.checkIns,
+                    exerciseRotation: state.exerciseRotation
+                }
+            };
+
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            const timestamp = new Date().toISOString().slice(0, 10);
+            link.download = `mft-backup-${timestamp}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            alert('✅ Backup exported successfully!\n\nFile saved to your downloads.');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+
+                    if (!imported.data) {
+                        alert('❌ Invalid backup file format');
+                        return;
+                    }
+
+                    // Confirm before overwriting
+                    const confirmMsg = `Import backup from ${new Date(imported.exportDate).toLocaleDateString()}?\n\nThis will REPLACE all current data:\n- ${imported.data.completedSessions?.length || 0} training sessions\n- ${imported.data.checkIns?.length || 0} check-ins\n- ${imported.data.exposureLadder?.length || 0} ladder items\n- ${imported.data.incidents?.length || 0} incidents`;
+
+                    if (!confirm(confirmMsg)) {
+                        event.target.value = ''; // Reset file input
+                        return;
+                    }
+
+                    // Import data
+                    state.completedSessions = imported.data.completedSessions || [];
+                    state.exposureLadder = imported.data.exposureLadder || [];
+                    state.workabilityRatings = imported.data.workabilityRatings || [];
+                    state.incidents = imported.data.incidents || [];
+                    state.checkIns = imported.data.checkIns || [];
+                    state.exerciseRotation = imported.data.exerciseRotation || [];
+
+                    saveState();
+
+                    // Refresh UI
+                    renderTodayExercise();
+                    renderLadder();
+                    renderStats();
+                    renderCheckin();
+                    updateStreak();
+
+                    alert('✅ Backup imported successfully!\n\nAll data has been restored.');
+                    event.target.value = ''; // Reset file input
+                } catch (error) {
+                    alert('❌ Error importing backup:\n\n' + error.message);
+                    event.target.value = ''; // Reset file input
+                }
+            };
+
+            reader.readAsText(file);
+        }
+
+        function confirmClearData() {
+            const confirmMsg = `⚠️ WARNING: Clear ALL data?\n\nThis will permanently delete:\n- ${state.completedSessions.length} training sessions\n- ${state.checkIns.length} check-ins\n- ${state.exposureLadder.length} ladder items\n- ${state.incidents.length} incidents\n- All streaks and progress\n\nThis CANNOT be undone!\n\nExport a backup first if you want to save your data.`;
+
+            if (!confirm(confirmMsg)) return;
+
+            // Second confirmation
+            if (!confirm('Are you ABSOLUTELY SURE?\n\nThis will delete everything.')) return;
+
+            // Clear all data
+            state.completedSessions = [];
+            state.exposureLadder = [];
+            state.workabilityRatings = [];
+            state.incidents = [];
+            state.checkIns = [];
+            state.exerciseRotation = [];
+
+            saveState();
+
+            // Reinitialize rotation
+            initializeRotation();
+
+            // Refresh UI
+            renderTodayExercise();
+            renderLadder();
+            renderStats();
+            renderCheckin();
+            updateStreak();
+
+            alert('✅ All data cleared.\n\nStarting fresh.');
         }
 
         // PWA Manifest
