@@ -2250,13 +2250,29 @@
 
         // State persistence
         function saveState() {
-            localStorage.setItem('mft-state', JSON.stringify(state));
+            // Only save serializable data, exclude charts and runtime state
+            const saveData = {
+                exerciseRotation: state.exerciseRotation,
+                completedSessions: state.completedSessions,
+                exposureLadder: state.exposureLadder,
+                workabilityRatings: state.workabilityRatings,
+                incidents: state.incidents,
+                checkIns: state.checkIns
+            };
+            localStorage.setItem('mft-state', JSON.stringify(saveData));
         }
 
         function loadState() {
             const saved = localStorage.getItem('mft-state');
             if (saved) {
-                state = { ...state, ...JSON.parse(saved) };
+                const data = JSON.parse(saved);
+                // Only load serializable data
+                state.exerciseRotation = data.exerciseRotation || [];
+                state.completedSessions = data.completedSessions || [];
+                state.exposureLadder = data.exposureLadder || [];
+                state.workabilityRatings = data.workabilityRatings || [];
+                state.incidents = data.incidents || [];
+                state.checkIns = data.checkIns || [];
             }
         }
 
